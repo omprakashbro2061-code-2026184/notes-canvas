@@ -1,0 +1,125 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Install Android build tools
+        run: |
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build React app (Vite)
+        run: npm run build
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli@5
+
+      - name: Add Android platform (fresh)
+        run: |
+          rm -rf android
+          npx cap add android
+
+      - name: Sync Capacitor web assets
+        run: npx cap sync android
+
+      - name: Make Gradle executable
+        run: chmod +x android/gradlew
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Build debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+
+      - name: Find and rename APK
+        run: |
+          APK=$(find android -name "*.apk" | head -1)
+          OUTNAME="NotesCanvas-$(date +%Y%m%d-%H%M).apk"
+          cp "$APK" "$OUTNAME"
+          echo "APK_FILE=$OUTNAME" >> $GITHUB_ENV
+          echo "Built: $OUTNAME"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APK_FILE }}
+          path: ${{ env.APK_FILE }}
+          retention-days: 60
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "Notes Canvas v1.0.${{ github.run_number }}"
+          body: |
+            ## 📱 Notes Canvas APK
+
+            **Auto-built from commit:** `${{ github.sha }}`
+
+            ### Install:
+            1. Download the APK file below ↓
+            2. On Android: Settings → Security → Allow unknown sources
+            3. Open the APK → Install → Done!
+
+            ### Features in this build:
+            - ✏️ Pen, Marker, Highlighter tools
+            - 📝 Sticky notes (6 colors, folded corner)
+            - T Text with 7 fonts, rainbow colors, B/I/U/S
+            - ◇ Shapes: Rect, Circle, Triangle, Diamond, Pentagon, Star
+            - ⭐ 80 Stickers across 5 categories
+            - 🎀 Washi tape decoration
+            - 🎨 4 mood themes (Dark, Pastel, Cyberpunk, Vintage)
+            - 📄 3 canvas textures (Dots, Grid, Parchment)
+            - 📷 PNG export + JSON save/load
+            - 💾 Fully offline, auto-saves locally
+          files: ${{ env.APK_FILE }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

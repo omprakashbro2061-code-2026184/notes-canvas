@@ -1,0 +1,22 @@
+apply plugin: 'com.android.library'
+
+android {
+    namespace "com.getcapacitor.cordova"
+    compileSdkVersion project.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion project.ext.minSdkVersion
+        targetSdkVersion project.ext.targetSdkVersion
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'src/main/libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'src/main/libs', include: ['*.aar', '*.jar'], exclude: [])
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation project(':capacitor-android')
+}
