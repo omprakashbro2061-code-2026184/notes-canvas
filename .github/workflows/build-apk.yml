@@ -79,7 +79,7 @@ jobs:
       - name: Find and rename APK
         run: |
           APK=$(find android -name "*.apk" | head -1)
-          OUTNAME="NotesCanvas-$(date +%Y%m%d-%H%M).apk"
+          OUTNAME="MyCanvas-$(date +%Y%m%d-%H%M).apk"
           cp "$APK" "$OUTNAME"
           echo "APK_FILE=$OUTNAME" >> $GITHUB_ENV
           echo "Built: $OUTNAME"
@@ -96,9 +96,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.${{ github.run_number }}
-          name: "Notes Canvas v1.0.${{ github.run_number }}"
+          name: "MyCanvas v1.0.${{ github.run_number }}"
           body: |
-            ## 📱 Notes Canvas APK
+            ## 📱 MyCanvas APK
 
             **Auto-built from commit:** `${{ github.sha }}`
 

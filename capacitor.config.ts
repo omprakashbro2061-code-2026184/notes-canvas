@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.notesapp.canvas',
-  appName: 'Notes Canvas',
+  appName: 'MyCanvas',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
