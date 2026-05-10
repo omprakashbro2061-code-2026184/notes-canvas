@@ -1,23 +1,21 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
-  appId: 'com.notesapp.canvas',
+  appId: 'com.mycanvas.app',
   appName: 'MyCanvas',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    cleartext: true,
   },
   android: {
-    buildOptions: {
-      keystorePath: undefined,
-      keystoreAlias: undefined,
-    }
+    allowMixedContent: true,
+    backgroundColor: '#000000',
   },
   plugins: {
-    SplashScreen: {
-      launchShowDuration: 0
-    }
-  }
-};
+    SplashScreen: { launchShowDuration: 0 },
+    StatusBar: { style: 'Dark', backgroundColor: '#000000' },
+  },
+}
 
-export default config;
+export default config

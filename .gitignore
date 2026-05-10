@@ -3,20 +3,10 @@ dist/
 .DS_Store
 *.local
 .env
-.env.local
-
-# Android build outputs
 android/app/build/
 android/.gradle/
 android/build/
 android/local.properties
-
-# NOT excluded: android source files (needed for GitHub Actions reference)
-
-# IDE
+.capacitor/
 .idea/
 *.iml
-.vscode/
-
-# Capacitor generated (re-created by cap sync)
-.capacitor/

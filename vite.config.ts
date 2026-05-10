@@ -9,9 +9,7 @@ export default defineConfig({
     assetsDir: 'assets',
     rollupOptions: {
       output: {
-        manualChunks: {
-          fabric: ['fabric'],
-        }
+        manualChunks: { fabric: ['fabric'] }
       }
     }
   }
