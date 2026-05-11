@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from 'react'
+﻿import { useEffect, useRef, useCallback, useState } from 'react'
 import { fabric } from 'fabric'
 import { useStore } from '../store/useStore'
 import { NOTE_STYLES } from '../data/index'
@@ -119,7 +119,7 @@ export default function CanvasScreen() {
     fc.setBackgroundImage(bc.toDataURL(),fc.renderAll.bind(fc))
   },[])
 
-  // ── Init ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(()=>{
     if(!cvRef.current||!activeCanvasId) return
     const wrap=document.getElementById('cv-wrap')!
@@ -152,7 +152,7 @@ export default function CanvasScreen() {
     fc.on('object:removed', doSave)
     fc.on('text:changed',   doSave)
 
-    // ── Double tap for sticky notes (mobile) ──────────────────────────────
+    // â”€â”€ Double tap for sticky notes (mobile) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const handleTouchEnd=(e:TouchEvent)=>{
       const now=Date.now()
       const diff=now-lastTap.current
@@ -178,7 +178,7 @@ export default function CanvasScreen() {
       }
       lastTap.current=now
     }
-    fc.upperCanvasEl.addEventListener('touchend',handleTouchEnd,{passive:true})
+    (fc as any).upperCanvasEl.addEventListener('touchend',handleTouchEnd,{passive:true})
 
     // Keyboard
     const onKey=(e:KeyboardEvent)=>{
@@ -210,7 +210,7 @@ export default function CanvasScreen() {
   // eslint-disable-next-line
   },[activeCanvasId])
 
-  // ── Drawing tool handlers ─────────────────────────────────────────────────
+  // â”€â”€ Drawing tool handlers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(()=>{
     const fc=fcRef.current; if(!fc||!ready) return
 
@@ -225,7 +225,7 @@ export default function CanvasScreen() {
 
       const pos=getPos(e)
 
-      // ── Pen / Marker / Highlighter ──────────────────────────────────────
+      // â”€â”€ Pen / Marker / Highlighter â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='pen'||t==='marker'||t==='highlighter'){
         isDown.current=true
         const size  = t==='marker'   ? psRef.current*2.5 : psRef.current
@@ -241,13 +241,13 @@ export default function CanvasScreen() {
         return
       }
 
-      // ── Eraser ──────────────────────────────────────────────────────────
+      // â”€â”€ Eraser â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='eraser'){
         isDown.current=true
         return
       }
 
-      // ── Text ────────────────────────────────────────────────────────────
+      // â”€â”€ Text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='text'){
         const tf=tfRef.current
         const tb=new fabric.Textbox('',{
@@ -264,14 +264,14 @@ export default function CanvasScreen() {
         return
       }
 
-      // ── Sticky note ──────────────────────────────────────────────────────
+      // â”€â”€ Sticky note â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='sticky'){
         const note=makeStickyNote(pos.x,pos.y,nsRef.current)
         fc.add(note); fc.setActiveObject(note); fc.renderAll(); doSave()
         return
       }
 
-      // ── Shape ────────────────────────────────────────────────────────────
+      // â”€â”€ Shape â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='shape'){
         const s      = stRef.current
         const stroke = pcRef.current
@@ -289,7 +289,7 @@ export default function CanvasScreen() {
         return
       }
 
-      // ── Connector ────────────────────────────────────────────────────────
+      // â”€â”€ Connector â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
       if(t==='connector'){
         const line=new fabric.Line([pos.x,pos.y,pos.x,pos.y],{
           stroke:pcRef.current, strokeWidth:2.5,
@@ -385,3 +385,4 @@ export default function CanvasScreen() {
     </div>
   )
 }
+
