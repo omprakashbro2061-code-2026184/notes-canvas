@@ -11,10 +11,21 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true,
     backgroundColor: '#000000',
+    overrideUserAgent: 'MyCanvas/2.0 Android',
   },
   plugins: {
-    SplashScreen: { launchShowDuration: 0 },
-    StatusBar: { style: 'Dark', backgroundColor: '#000000' },
+    SplashScreen: {
+      launchShowDuration: 0,
+      backgroundColor: '#000000',
+    },
+    StatusBar: {
+      style: 'Dark',
+      backgroundColor: '#000000',
+    },
+    Keyboard: {
+      resize: 'body',
+      resizeOnFullScreen: true,
+    },
   },
 }
 

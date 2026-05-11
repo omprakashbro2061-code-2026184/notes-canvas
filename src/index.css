@@ -221,3 +221,26 @@ html,body,#root {
   transition:border-color 0.2s;
 }
 .input:focus { border-color:var(--accent); }
+
+/* ── Touch fixes ─────────────────────────────────────────────────────────── */
+canvas {
+  touch-action: none !important;
+}
+#cv-wrap {
+  touch-action: none !important;
+  -webkit-user-select: none;
+  user-select: none;
+}
+/* Allow scroll only in panels */
+.scroll-x, .scroll-y, [data-scroll] {
+  touch-action: pan-x pan-y !important;
+}
+/* Logo gradient */
+.app-logo {
+  width: 44px; height: 44px; border-radius: 14px;
+  background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  box-shadow: 0 4px 20px rgba(167,139,250,0.5);
+  flex-shrink: 0;
+}
